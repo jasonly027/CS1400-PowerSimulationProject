@@ -1,1 +1,0 @@
-# CS1400-PowerSimulationProject
