@@ -113,7 +113,7 @@ public class Simulate {
 				//----------------------------------------------------------
 				//Step 4: Report these changes - if any. If not, procced to Part D
 				//----------------------------------------------------------
-				if(totalChangesSmart != 0)
+				if(totalChangesSmart != SmartApplianceOrganized.size())
 				{
 					ReportPrint();
 				}
