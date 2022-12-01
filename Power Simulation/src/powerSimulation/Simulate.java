@@ -158,7 +158,7 @@ public class Simulate {
 						}
 					}
 					
-					//Find the min location
+					//Find the min location and subtract from total system's wattage (totalWatWhenLow)
 					while(totalWatWhenLow > maxWattage) 
 					{
 						int minLocationWattage = Integer.MAX_VALUE;
@@ -168,12 +168,11 @@ public class Simulate {
 							Location location = locationList.get(i);
 							if(location.getSumWattage() < minLocationWattage && !location.getIsBrowned()) {
 								minLocationWattage = location.getSumWattage();
-							}////////////////////not finished
+								locationPosition = i;
+							}
 						}
 						totalWatWhenLow -= minLocationWattage;
-						
-						//Each time something's chosen:
-						ReportLocations.add(LocationList.get(i));
+						ReportLocations.add(locationList.get(locationPosition));
 					}
 				}
 			}
