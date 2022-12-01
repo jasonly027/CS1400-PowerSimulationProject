@@ -18,8 +18,46 @@ public class SmartAppliance extends RegularAppliance{
 		Getters and Setters methods for all attributes
 		
 	*/
-	SmartAppliance() {
-		//Stuff
+	private boolean onLow;
+	private int wattageOnLow;
+	private int difference;
+	private int position;
+	
+	public SmartApp(int ID, String n, int on, int off, double pOn, boolean s, double pSmart) {
+		super(ID, n, on, off, pOn, s, pSmart);
+		this.setDifference(super.getOnW() - this.getWattageOnLow());
+		this.setWattageOnLow((super.getOnW() -(int)(super.getProbSmart()*super.getOnW())));
 	}
-	//Stuff
+	
+	public void setOnLow(boolean on) {
+		onLow = on;
+	}
+	
+	public void setWattageOnLow(int wattageOnLow) {
+		this.wattageOnLow = wattageOnLow;
+	}
+	
+	public boolean getOnLow() {
+		return onLow;
+	}
+	
+	public int getDifference() {
+		return difference;
+	}
+
+	public void setDifference(int difference) {
+		this.difference = difference;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public int getWattageOnLow() {
+		return wattageOnLow;
+	}
 }
