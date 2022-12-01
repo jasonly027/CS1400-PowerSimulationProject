@@ -21,11 +21,13 @@ public class Simulate {
 //------------------------------------------------------------------------------------------------------//
 			
 			//Populate "ON" appliances list
+			ArrayList<RegularAppliance> ON_ApplianceList = new ArrayList<RegularAppliance>();
 			
-			//Calculate sum wattage of "ON" list
+			//Calculate total wattage of "ON" list
+			int totalWattage;
 			
 			//Check if <= max wattage 
-			if(sumWatts <= maxWattage) {
+			if(totalWattage <= maxWattage) {
 				ReportPrint();
 				continue;
 			}
@@ -40,7 +42,7 @@ public class Simulate {
 				
 				ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //this here lists all the smart appliances.
 				ArrayList <SmartAppliance> smartAppliances1 = new ArrayList<SmartAppliance>(); //a copy of the array above, do not use this! I will empty this array!
-				ArrayList <SmartAppliance> SmartApplianceOrganized = new ArrayList<SmartAppliance>(); //organized list of smart appliances in decreasing order based on their wat reduction
+				ArrayList <SmartAppliance> SmartApplianceOrganized = new ArrayList<SmartAppliance>(); //organized list of smart appliances in decreasing order based on their watt reduction
 				int totalChangesSmart = 0;
 				int totalWattage = 0;
 				
@@ -92,7 +94,7 @@ public class Simulate {
 				//----------------------------------------------------------
 				//Step 3: Iterate through organized smart appliance array and minus the difference from total wattage. Keep doing so until reach max wattage
 				//----------------------------------------------------------
-				int totalWatWhenLow = sumWatts; //total wattage when smart appliances are set to low
+				int totalWatWhenLow = totalWattage; //total wattage when smart appliances are set to low
 				System.out.println("Total Wattage if all are on:" + totalWatWhenLow);
 				for(int i = 0; i < SmartApplianceOrganized.size();i++)
 				{
@@ -117,20 +119,62 @@ public class Simulate {
 				{
 					ReportPrint();
 				}
-			}
+			
 //-----------------------------------------------------------------------------------------------------//
 					////////////////////////
 					// PART D STARTS HERE //
 					////////////////////////
 //------------------------------------------------------------------------------------------------------//
 			
-			if(sumWatts > maxWattage) {
-				//Create list of Location Objects
-				while(sumWatts > maxWattage) {
-					//Reduce sumWatts by a location's blah blah
+				if(totalWatWhenLow > maxWattage) 
+				{	
+					//Create list of all location numbers then create location objects based off those numbers
+					ArrayList<Integer> locationIDList = Location.getLocationIDList(ON_ApplianceList);
+					ArrayList<Location> locationList = new ArrayList<Location>();
+					for(int i=0; i<locationIDList.size(); ++i) 
+					{
+						locationList.add(new Location(locationIDList.get(i)));
+					}
 					
-					//Each time something's chosen:
-					ReportLocations.add(LocationList.get(i));
+					//Add the wattage of each appliance to their respective location (object)
+					for(int i=0; i<ON_ApplianceList.size(); ++i) 
+					{
+						RegularAppliance ON_Appliance = ON_ApplianceList.get(i);
+						for(int j=0; j<locationList.size(); ++j) 
+						{
+							if(ON_Appliance.getLocation() == locationList.get(j).getLocationID()) 
+							{
+								if(ON_Appliance.isSmart()) 
+								{
+									int smartApplianceWattage = ON_Appliance.getOnW() * (1 - ON_Appliance.getProbSmart());
+									locationList.get(j).addWattage(smartApplianceWattage);
+								}
+								else 
+								{
+									locationList.get(j).addWattage(ON_Appliance.getOnW);
+								}
+								break;
+							}
+						}
+					}
+					
+					//Find the min location
+					while(totalWatWhenLow > maxWattage) 
+					{
+						int minLocationWattage = Integer.MAX_VALUE;
+						int locationPosition = -1;
+						for(int i=0; i<locationList.size(); ++i)
+						{
+							Location location = locationList.get(i);
+							if(location.getSumWattage() < minLocationWattage && !location.getIsBrowned()) {
+								minLocationWattage = location.getSumWattage();
+							}////////////////////not finished
+						}
+						totalWatWhenLow -= minLocationWattage;
+						
+						//Each time something's chosen:
+						ReportLocations.add(LocationList.get(i));
+					}
 				}
 			}
 			
