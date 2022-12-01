@@ -23,19 +23,19 @@ public class Simulate {
 			
 			//Populate "ON" appliances list
 			
-			ArrayList<RegularAppliance> AppOn = new ArrayList<RegularAppliance>;
+			ArrayList<RegularAppliance> AppOn = new ArrayList<RegularAppliance>();
 			Random randGen = new Random();
-			for(int j = 0; j < ApplianceList.size; ++j){
+			for(int j = 0; j < ApplianceList.size(); ++j){
 				
 				if(ApplianceList.get(j).getprobOn() >= randGen.nextDouble()){
-					AppOn.add(new RegularAppliance(ApplianceList.get(i).getID(), ApplianceList.get(i).getName(),ApplianceList.get(i).getOnW(), ApplianceList.get(i).getProbOn(), ApplianceList.get(i).isSmart(), ApplianceList.get(i).getProbSmart()));
+					AppOn.add(new RegularAppliance(ApplianceList.get(j).getID(), ApplianceList.get(j).getName(),ApplianceList.get(j).getOnW(), ApplianceList.get(j).getProbOn(), ApplianceList.get(j).isSmart(), ApplianceList.get(j).getProbSmart()));
 				}
 			}
 			
 			//Calculate sum wattage of "ON" list
 			
 			int totalWattage = 0;
-			for(int i = 0; i < AppOn.size; ++i){
+			for(int i = 0; i < AppOn.size(); ++i){
 				totalWattage += AppOn.get(i).getOnW();
 			}
 			
