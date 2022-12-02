@@ -26,8 +26,9 @@ public class AppClient {
 				//Add
 				while(true) {
 					System.out.println("Input appliance data or type \"C\" to quit");
-					System.out.println("location, appliance description, watt used, probability of appliance \"on\", boolean on, percentage reduction");
+					System.out.println("location, appliance description, watt used, probability of appliance \"on\", smart appliance?: True or False, percentage reduction (0.0 for regular)");
 					System.out.println("ex) 10000001,VCR,45,0.05,false,0.0");
+					System.out.println("ex) 10000002,Laptop,0.20,true,0.23"); 
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
 						appMenu();
@@ -86,7 +87,7 @@ public class AppClient {
 							System.out.println(wrongInputDisplay());
 							continue;
 						}
-//						for(int i=0;i<applianceList.size();i++) {
+//						for(int i=0;i<applianceList.size();i++) { //This will delete appliances with the same ID. Pls fix! It should remove a specific appliance!
 //							if(applianceList.get(i).getID().equals(userInput)) {
 //								applianceList.remove(i);
 //								break;
@@ -181,6 +182,7 @@ public class AppClient {
 		System.out.println("\t Type \"A\" Add an appliance");
 		System.out.println("\t Type \"D\" Delete an appliance");	
 		System.out.println("\t Type \"L\" List the appliances");
+		System.out.println("\t Type \"X\" Delete all appliances");
 		System.out.println("\t Type \"F\" Read Appliances from a file");
 		System.out.println("\t Type \"S\" To Start the simulation");
 		System.out.println("\t Type \"Q\" Quit the program");
