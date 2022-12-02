@@ -207,7 +207,7 @@ public class AppClient {
 	}
 	
 	public static String wrongInputDisplay() {
-		String output = "/// ERROR: Wrong input /// \n";
+		String output = "/// ERROR: Invalid input /// \n";
 		return output;
 	}
 
