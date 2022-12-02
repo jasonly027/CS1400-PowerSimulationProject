@@ -50,5 +50,10 @@ public class Location {
 		this.sumWattage = 0;
 		this.isBrowned = false;
 	}
-	//stuff
+	
+	@Override
+	public String toString() {
+		String retString = "Location: locationID=" + this.locationID + ", sumWattage=" + this.sumWattage;
+		return retString;
+	}
 }

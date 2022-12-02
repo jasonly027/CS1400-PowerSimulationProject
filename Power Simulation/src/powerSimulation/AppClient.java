@@ -24,7 +24,7 @@ public class AppClient {
 			if (userInput.equals("A")) {
 				//Add
 				while(true) {
-					System.out.println("Input appliance data or type \"C\" to quit");
+					System.out.println("\nInput appliance data or type \"C\" to quit");
 					System.out.println("/// Appliance data should be in the format of:\n    (Location ID (Integer),"
 									 													  + "Appliance Description,"
 									 													  + "Watt usage (Integer),"
@@ -33,7 +33,7 @@ public class AppClient {
 									 													  + "Percentage of watt reduction if it is a smart appliance (0.00 to 1.00)"
 									 													  + "*Input 0.00 if it is a regular appliance");
 					System.out.println("/// Example inputs: 10000001,VCR,45,0.05,false,0.0");
-					System.out.println("                    10000002,Laptop,0.20,true,0.23");
+					System.out.println("                    10000002,Laptop,0.20,true,0.23\n");
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
 						appMenu();
@@ -81,6 +81,7 @@ public class AppClient {
 															   Double.parseDouble(inputArray[3]), 
 															   Boolean.parseBoolean(inputArray[4]), 
 															   Double.parseDouble(inputArray[5])));
+						System.out.println("Appliance has been successfully added");
 					}
 				}
 				
@@ -88,7 +89,12 @@ public class AppClient {
 			else if (userInput.equals("D")) {
 				//Remove
 				while(true) {
-					System.out.println("Input valid appliance ID or type \"c\" to quit");
+					if(applianceList.size() == 0) {
+						System.out.println("/// ERROR: Cannot use this option if the appliance list is empty ///\n");
+						appMenu();
+						break;
+					}
+					System.out.println("Input valid appliance ID or type \"C\" to quit\n");
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
 						appMenu();
@@ -97,6 +103,7 @@ public class AppClient {
 						try {
 							for(int i=0;i<applianceList.size();i++) {
 								if(applianceList.get(i).getID() == Integer.parseInt(userInput)) {
+									System.out.println("Appliance " + userInput + " has been successfully deleted\n");
 									applianceList.remove(i);
 									break;
 								}
@@ -110,9 +117,12 @@ public class AppClient {
 			}
 			else if (userInput.equals("L")) {
 				//Print List
+				System.out.println("Appliance List:");
 				for(int i=0;i<applianceList.size();i++) {
-					System.out.println(applianceList.get(i));
+					System.out.println("/// " + applianceList.get(i));
 				}
+				System.out.println();
+				appMenu();
 			}
 			else if (userInput.equals("G")) {
 				//Generate
@@ -120,7 +130,7 @@ public class AppClient {
 					ApplianceGenerator.main(args);
 					File myfile = new File("output.txt");
 					Scanner scanner = new Scanner(myfile);
-					for(int i=0;i<applianceList.size();i++) {
+					while(scanner.hasNextLine()) {
 						String fileInput = scanner.nextLine();
 						String []inputArray = fileInput.split(",");
 						applianceList.add(new RegularAppliance(Integer.parseInt(inputArray[0]), 
@@ -134,23 +144,30 @@ public class AppClient {
 				}
 				
 				catch(IOException ioe) {
-					System.out.println("/// ERROR: Program cannot find the file \"ApplianceDetail.txt\" used for generating appliances ///");
+					System.out.println("/// ERROR: Program cannot find the file \"ApplianceDetail.txt\" used for generating appliances ///\n");
 				}
+				System.out.println("Successfully added randomly generated appliances to the appliance list\n");
 				appMenu();
-
 			}
 			else if (userInput.equals("X")) {
 				//Empty
 				applianceList.clear();
 				applianceList.trimToSize();
+				System.out.println("Appliance list successfully emptied\n");
+				appMenu();
 			}
 			else if (userInput.equals("S")) {
+				if(applianceList.size() == 0) {
+					System.out.println("/// ERROR: Cannot use this option if the appliance list is empty ///\n");
+					appMenu();
+					continue;
+				}
 				//Simulation
 				//Prompt max wattage & time steps
 				String maxWatts = new String();
 				String timeSteps = new String();
 				while(true) {
-				System.out.println("Input total allowed wattage");
+				System.out.println("Input total allowed wattage: ");
 				maxWatts = scnr.nextLine();
 				try {
 					if (Integer.parseInt(maxWatts)<=0) {
@@ -164,7 +181,7 @@ public class AppClient {
 					break;
 				}
 				while(true) {
-				System.out.println("Input time steps");
+				System.out.println("Input time steps: ");
 				timeSteps = scnr.nextLine();
 				try {
 					if (Integer.parseInt(timeSteps)<=0) {
@@ -177,13 +194,14 @@ public class AppClient {
 				}
 					break;
 				}
-				System.out.println("Starting simulation");
+				System.out.println("Starting simulation\n");
 				
 				Simulate.main(applianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
 				
 			}
 			else if (userInput.equals("Q")) {
 				//Quit
+				System.out.println("Closing Program\n");
 				System.exit(0);
 			}
 			else {
@@ -197,17 +215,18 @@ public class AppClient {
 	
 	public static void appMenu() {
 		System.out.println("Select an option:");
-		System.out.println("/// Type \"A\" Add an appliance");
-		System.out.println("/// Type \"D\" Delete an appliance");	
-		System.out.println("/// Type \"L\" Print the appliances");
-		System.out.println("/// Type \"G\" Generate text file");
-		System.out.println("/// Type \"X\" Delete all appliances");
-		System.out.println("/// Type \"S\" To Start the simulation");
-		System.out.println("/// Type \"Q\" Quit the program");
+		System.out.println("/// Type \"A\" to add an appliance to the appliance list");
+		System.out.println("/// Type \"D\" to delete an appliance from the appliance list");	
+		System.out.println("/// Type \"L\" to print the appliance list");
+		System.out.println("/// Type \"G\" to add randomly generated appliances to the appliance list");
+		System.out.println("/// Type \"X\" to empty the appliance list");
+		System.out.println("/// Type \"S\" to start the simulation");
+		System.out.println("/// Type \"Q\" to quit the program");
+		System.out.println();
 	}
 	
 	public static String wrongInputDisplay() {
-		String output = "/// ERROR: Wrong input /// \n";
+		String output = "/// ERROR: Invalid input /// \n";
 		return output;
 	}
 

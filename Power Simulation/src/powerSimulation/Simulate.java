@@ -5,11 +5,18 @@ import java.util.Random;
 
 public class Simulate {
 	
-	private static ArrayList<SmartAppliance> ReportSmartAppliances;
-	private static ArrayList<Location> ReportLocations;
+	private static ArrayList<SmartAppliance> ReportSmartAppliances = new ArrayList<SmartAppliance>();
+	private static ArrayList<Location> ReportLocations = new ArrayList<Location>();
 	
 	private static void ReportPrint() {
-		//stuff
+		System.out.println("Smart appliances that were switched to low mode:");
+		for(SmartAppliance smartAppliance : ReportSmartAppliances) {
+			System.out.println("/// " + smartAppliance);
+		}
+		System.out.println("\nLocations that were browned out:");
+		for(Location location : ReportLocations) {
+			System.out.println("/// " + location);
+		}
 	}
 	
 	public static void main(ArrayList<RegularAppliance> applianceList, int maxWattage, int timeSteps) {
@@ -31,7 +38,7 @@ public class Simulate {
 			Random randGen = new Random();
 			for(int j = 0; j < applianceList.size(); ++j){
 				
-				if(applianceList.get(j).getProbOn() >= randGen.nextDouble()){
+				if(applianceList.get(j).getProbOn() <= 0.01*(randGen.nextInt(100)+1)){
 					appOn.add(new RegularAppliance(applianceList.get(j).getLocationID(), applianceList.get(j).getAppName(),applianceList.get(j).getOnW(), applianceList.get(j).getProbOn(), applianceList.get(j).getSmart(), applianceList.get(j).getProbSmart()));
 				}
 			}
@@ -127,14 +134,6 @@ public class Simulate {
 					}
 				}
 				
-				//----------------------------------------------------------
-				//Step 4: Report these changes - if any. If not, procced to Part D
-				//----------------------------------------------------------
-				if(totalChangesSmart != SmartApplianceOrganized.size())
-				{
-					ReportPrint();
-				}
-			
 //-----------------------------------------------------------------------------------------------------//
 					////////////////////////
 					// PART D STARTS HERE //
@@ -177,26 +176,26 @@ public class Simulate {
 					while(totalWattWhenLow > maxWattage) 
 					{
 						int minLocationWattage = Integer.MAX_VALUE;
-						int locationPosition = -1;
-						for(int i=0; i<locationList.size(); ++i)
+						Location minLocation = new Location(-1);
+						for(Location location : locationList) 
 						{
-							Location location = locationList.get(i);
-							if(location.getSumWattage() < minLocationWattage && !location.getIsBrowned()) {
+							if(location.getSumWattage() < minLocationWattage && !location.getIsBrowned()) 
+							{
 								minLocationWattage = location.getSumWattage();
-								locationPosition = i;
+								minLocation = location;
+								location.setIsBrowned(true);
 							}
 						}
 						totalWattWhenLow -= minLocationWattage;
-						ReportLocations.add(locationList.get(locationPosition));
+						ReportLocations.add(minLocation);
 					}
 				}
 			}
-			
-			ReportPrint();
-			ReportSmartAppliances.clear();
-			ReportSmartAppliances.trimToSize();
-			ReportLocations.clear();
-			ReportLocations.trimToSize();
+//			ReportPrint();
+//			ReportSmartAppliances.clear();
+//			ReportSmartAppliances.trimToSize();
+//			ReportLocations.clear();
+//			ReportLocations.trimToSize();
 		}
 	}
 }
