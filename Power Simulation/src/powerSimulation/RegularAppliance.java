@@ -13,10 +13,11 @@ package powerSimulation;
 	*/
 public class RegularAppliance extends Appliance{
 	private int ID;
+	private static int IDCounter = 0;
 	
-	public RegularAppliance(int ID, String n, int on, int off, double pOn, boolean s, double pSmart){
-		super(n, on, off, pOn, s, pSmart);
-		this.ID = ID;
+	public RegularAppliance(int locID, String n, int on, double pOn, boolean s, double pSmart){
+		super(locID, n, on, pOn, s, pSmart);
+		this.ID = IDCounter++;
 	}
 	
 	public void setID(int id) {
@@ -29,6 +30,7 @@ public class RegularAppliance extends Appliance{
 	
 	@Override
 	public String toString() {
-		return "RegularAppliance [ID=" + ID + "]";
+		String retString = super.toString() + ", ID=" + ID;
+		return retString;
 	}
 }

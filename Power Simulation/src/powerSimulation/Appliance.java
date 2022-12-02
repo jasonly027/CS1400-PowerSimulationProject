@@ -1,20 +1,24 @@
 package powerSimulation;
 
 public class Appliance {
+	public int locationID;
 	public String appName;
 	public int onW;
-	public int offW;
 	public double probOn;
 	public boolean smart;
 	public double probSmart;
 	
-	Appliance(String n, int on, int off, double pOn, boolean s, double pSmart) {
+	Appliance(int locID, String n, int on, double pOn, boolean s, double pSmart) {
+		this.locationID = locID;
 		this.appName = n;
 		this.onW = on;
-		this.offW = off;
 		this.probOn = pOn;
 		this.smart = s;
 		this.probSmart = pSmart;
+	}
+	
+	public void setLocationID(int locID) {
+		locationID = locID;
 	}
 	
 	public void setName(String name) {
@@ -23,10 +27,6 @@ public class Appliance {
 	
 	public void setonW(int on) {
 		onW = on;
-	}
-	
-	public void setoffW(int off) {
-		offW = off;
 	}
 	
 	public void setProbOn(double probO) {
@@ -41,12 +41,12 @@ public class Appliance {
 		probSmart = probS;
 	}
 	
-	public String getAppName() {
-		return appName;
+	public int getLocationID() {
+		return locationID;
 	}
 	
-	public int getOffW() {
-		return offW;
+	public String getAppName() {
+		return appName;
 	}
 	
 	public int getOnW() {
@@ -67,7 +67,7 @@ public class Appliance {
 
 	@Override
 	public String toString() {
-		return "Appliance [appName=" + appName + ", onW=" + onW + ", offW=" + offW + ", probOn=" + probOn + ", smart="
-				+ smart + ", probSmart=" + probSmart + "]";
+		return "Appliance: locationID=" + locationID + ", appName=" + appName + ", onW=" + onW + ", probOn=" + probOn + ", smart="
+				+ smart + ", probSmart=" + probSmart;
 	}
 }

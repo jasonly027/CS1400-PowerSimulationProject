@@ -1,7 +1,6 @@
 package powerSimulation;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Random;
 
 public class Simulate {
@@ -13,11 +12,11 @@ public class Simulate {
 		//stuff
 	}
 	
-	public static void main(ArrayList<RegularAppliance> ApplianceList, int maxWattage, int timeSteps) {
+	public static void main(ArrayList<RegularAppliance> applianceList, int maxWattage, int timeSteps) {
 		
-		ArrayList<RegularAppliance> AppOn = new ArrayList<RegularAppliance>(); //Arraylist of appliances that are "ON"
-		ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //Arraylist of appliances that are "ON" and are smart
-		int totalWattage; //stores total amount of wattage when all appliances are "ON"
+//		ArrayList<RegularAppliance> appOn = new ArrayList<RegularAppliance>(); //Arraylist of appliances that are "ON"
+//		ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //Arraylist of appliances that are "ON" and are smart
+//		int totalWattage; //stores total amount of wattage when all appliances are "ON"
 		
 		for(int currentStep=0; currentStep<timeSteps; ++currentStep) {
 //------------------------------------------------------------------------------------------------------//
@@ -27,27 +26,27 @@ public class Simulate {
 //------------------------------------------------------------------------------------------------------//
 			
 			//Populate "ON" appliances list
-			ArrayList<RegularAppliance> ON_ApplianceList = new ArrayList<RegularAppliance>();
+			ArrayList<RegularAppliance> appOn = new ArrayList<RegularAppliance>();
 			
 			Random randGen = new Random();
-			for(int j = 0; j < ApplianceList.size(); ++j){
+			for(int j = 0; j < applianceList.size(); ++j){
 				
-				if(ApplianceList.get(j).getprobOn() >= randGen.nextDouble()){
-					AppOn.add(new RegularAppliance(ApplianceList.get(j).getID(), ApplianceList.get(j).getName(),ApplianceList.get(j).getOnW(), ApplianceList.get(j).getProbOn(), ApplianceList.get(j).isSmart(), ApplianceList.get(j).getProbSmart()));
+				if(applianceList.get(j).getProbOn() >= randGen.nextDouble()){
+					appOn.add(new RegularAppliance(applianceList.get(j).getLocationID(), applianceList.get(j).getAppName(),applianceList.get(j).getOnW(), applianceList.get(j).getProbOn(), applianceList.get(j).getSmart(), applianceList.get(j).getProbSmart()));
 				}
 			}
 			
 			//Calculate sum wattage of "ON" list
 			
-			totalWattage = 0;
-			for(int i = 0; i < AppOn.size(); ++i){
-				totalWattage += AppOn.get(i).getOnW();
+			int totalWattage = 0;
+			for(int i = 0; i < appOn.size(); ++i){
+				totalWattage += appOn.get(i).getOnW();
 			}
 			
 			//Check if <= max wattage 
 			if(totalWattage <= maxWattage) {
 				ReportPrint();
-				continue
+				continue;
 			}
 //-----------------------------------------------------------------------------------------------------//
 					////////////////////////
@@ -57,25 +56,25 @@ public class Simulate {
 			
 			else 
 			{
+				ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //Arraylist of appliances that are "ON" and are smart
 				ArrayList <SmartAppliance> smartAppliances1 = new ArrayList<SmartAppliance>(); //a copy of smart appliance arraylist
 				ArrayList <SmartAppliance> SmartApplianceOrganized = new ArrayList<SmartAppliance>(); //organized list of smart appliances in decreasing order based on their wat reduction
 				
 				int totalChangesSmart = 0;
-				int totalWattage = 0;
 				
 				//----------------------------------------------------------
 				//Step 1: Find all the appliances that are smart and store it in a separate arraylist
 				//----------------------------------------------------------
 				
 				int counter = 0;
-				for(int i = 0; i < AppON.size(); i++)
+				for(int i = 0; i < appOn.size(); i++)
 				{
-					if(AppOn.get(i).isSmart())
+					if(appOn.get(i).getSmart())
 					{
 						//SmartAppliance(int id, String name, int o, double pOn1, boolean sm, double pSmart)
-						SmartAppliances.add(new SmartAppliance(ApplianceList.get(i).getID(), ApplianceList.get(i).getName(),ApplianceList.get(i).getOnW(), ApplianceList.get(i).getProbOn(), ApplianceList.get(i).isSmart(), ApplianceList.get(i).getProbSmart() ));
+						SmartAppliances.add(new SmartAppliance(applianceList.get(i).getLocationID(), applianceList.get(i).getAppName(),applianceList.get(i).getOnW(), applianceList.get(i).getProbOn(), applianceList.get(i).getSmart(), applianceList.get(i).getProbSmart() ));
 						SmartAppliances.get(counter).setPosition(counter);//Position value keeps track of the index where the smart appliance is in smart appliance array. 
-						smartAppliances1.add(new SmartAppliance(ApplianceList.get(i).getID(), ApplianceList.get(i).getName(),ApplianceList.get(i).getOnW(), ApplianceList.get(i).getProbOn(), ApplianceList.get(i).isSmart(), ApplianceList.get(i).getProbSmart() ));
+						smartAppliances1.add(new SmartAppliance(applianceList.get(i).getLocationID(), applianceList.get(i).getAppName(),applianceList.get(i).getOnW(), applianceList.get(i).getProbOn(), applianceList.get(i).getSmart(), applianceList.get(i).getProbSmart() ));
 						smartAppliances1.get(counter).setPosition(counter);
 						counter++;
 					}
@@ -110,12 +109,12 @@ public class Simulate {
 				//----------------------------------------------------------
 				//Step 3: Iterate through organized smart appliance array and minus the difference from total wattage. Keep doing so until reach max wattage
 				//----------------------------------------------------------
-				int totalWatWhenLow = totalWattage; //total wattage when smart appliances are set to low
-				System.out.println("Total Wattage if all are on:" + totalWatWhenLow);
+				int totalWattWhenLow = totalWattage; //total wattage when smart appliances are set to low
+				System.out.println("Total Wattage if all are on:" + totalWattWhenLow);
 				for(int i = 0; i < SmartApplianceOrganized.size();i++)
 				{
-					totalWatWhenLow = totalWatWhenLow - SmartApplianceOrganized.get(i).getDifference();
-					if(totalWatWhenLow <= maxWattage)
+					totalWattWhenLow = totalWattWhenLow - SmartApplianceOrganized.get(i).getDifference();
+					if(totalWattWhenLow <= maxWattage)
 					{
 						ReportSmartAppliances.add(  SmartAppliances.get( SmartApplianceOrganized.get(i).getPosition() )   );
 						totalChangesSmart++;
@@ -142,10 +141,10 @@ public class Simulate {
 					////////////////////////
 //------------------------------------------------------------------------------------------------------//
 			
-				if(totalWatWhenLow > maxWattage) 
+				if(totalWattWhenLow > maxWattage) 
 				{	
 					//Create list of all location numbers then create location objects based off those numbers
-					ArrayList<Integer> locationIDList = Location.getLocationIDList(ON_ApplianceList);
+					ArrayList<Integer> locationIDList = Location.getLocationIDList(appOn);
 					ArrayList<Location> locationList = new ArrayList<Location>();
 					for(int i=0; i<locationIDList.size(); ++i) 
 					{
@@ -153,29 +152,29 @@ public class Simulate {
 					}
 					
 					//Add the wattage of each appliance to their respective location (object)
-					for(int i=0; i<ON_ApplianceList.size(); ++i) 
+					for(int i=0; i<appOn.size(); ++i) 
 					{
-						RegularAppliance ON_Appliance = ON_ApplianceList.get(i);
+						RegularAppliance currentAppliance = appOn.get(i);
 						for(int j=0; j<locationList.size(); ++j) 
 						{
-							if(ON_Appliance.getLocation() == locationList.get(j).getLocationID()) 
+							if(currentAppliance.getLocationID() == locationList.get(j).getLocationID()) 
 							{
-								if(ON_Appliance.isSmart()) 
+								if(currentAppliance.getSmart()) 
 								{
-									int smartApplianceWattage = ON_Appliance.getOnW() * (1 - ON_Appliance.getProbSmart());
+									int smartApplianceWattage = (int)(currentAppliance.getOnW() * (1 - currentAppliance.getProbSmart()));
 									locationList.get(j).addWattage(smartApplianceWattage);
 								}
 								else 
 								{
-									locationList.get(j).addWattage(ON_Appliance.getOnW);
+									locationList.get(j).addWattage(currentAppliance.getOnW());
 								}
 								break;
 							}
 						}
 					}
 					
-					//Find the min location and subtract from total system's wattage (totalWatWhenLow)
-					while(totalWatWhenLow > maxWattage) 
+					//Find the min location and subtract from total system's wattage (totalWattWhenLow)
+					while(totalWattWhenLow > maxWattage) 
 					{
 						int minLocationWattage = Integer.MAX_VALUE;
 						int locationPosition = -1;
@@ -187,7 +186,7 @@ public class Simulate {
 								locationPosition = i;
 							}
 						}
-						totalWatWhenLow -= minLocationWattage;
+						totalWattWhenLow -= minLocationWattage;
 						ReportLocations.add(locationList.get(locationPosition));
 					}
 				}

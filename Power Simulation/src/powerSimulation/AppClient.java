@@ -2,7 +2,6 @@ package powerSimulation;
 
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.lang.NumberFormatException;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class AppClient {
 	
 	public static void main(String[] args) {
 		Scanner scnr = new Scanner(System.in);
-		ArrayList<RegularAppliance> ApplianceList = new ArrayList<>();
+		ArrayList<RegularAppliance> applianceList = new ArrayList<>();
 		
 		appMenu();
 		while(true) {
@@ -26,16 +25,25 @@ public class AppClient {
 				//Add
 				while(true) {
 					System.out.println("Input appliance data or type \"C\" to quit");
-					System.out.println("location, appliance description, watt used, probability of appliance \"on\", smart appliance?: True or False, percentage reduction (0.0 for regular)");
-					System.out.println("ex) 10000001,VCR,45,0.05,false,0.0");
-					System.out.println("ex) 10000002,Laptop,0.20,true,0.23"); 
+					System.out.println("/// Appliance data should be in the format of:\n    (Location ID (Integer),"
+									 													  + "Appliance Description,"
+									 													  + "Watt usage (Integer),"
+									 													  + "Probability of appliance being \"on\" (0.00 to 1.00),"
+									 													  + "Is it a smart appliance? (true or false),"
+									 													  + "Percentage of watt reduction if it is a smart appliance (0.00 to 1.00)"
+									 													  + "*Input 0.00 if it is a regular appliance");
+					System.out.println("/// Example inputs: 10000001,VCR,45,0.05,false,0.0");
+					System.out.println("                    10000002,Laptop,0.20,true,0.23");
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
 						appMenu();
 						break;
 					}else {
 						String []inputArray= userInput.split(",");
-						
+						if(inputArray.length != 6) {
+							System.out.println(wrongInputDisplay());
+							continue;
+						}
 						try {
 							Integer.parseInt(inputArray[0]);
 						}catch(NumberFormatException e) {
@@ -67,7 +75,12 @@ public class AppClient {
 							continue;
 						}
 						
-						ApplianceList.add(new RegularAppliance(inputArray[0], inputArray[1], inputArray[2], inputArray[3], inputArray[4], inputArray[5]));
+						applianceList.add(new RegularAppliance(Integer.parseInt(inputArray[0]), 
+															   inputArray[1], 
+															   Integer.parseInt(inputArray[2]), 
+															   Double.parseDouble(inputArray[3]), 
+															   Boolean.parseBoolean(inputArray[4]), 
+															   Double.parseDouble(inputArray[5])));
 					}
 				}
 				
@@ -82,16 +95,15 @@ public class AppClient {
 						break;
 					}else {
 						try {
-							Integer.parseInt(userInput);
+							for(int i=0;i<applianceList.size();i++) {
+								if(applianceList.get(i).getID() == Integer.parseInt(userInput)) {
+									applianceList.remove(i);
+									break;
+								}
+							}
 						}catch(NumberFormatException e) {
 							System.out.println(wrongInputDisplay());
 							continue;
-						}
-						for(int i=0;i<applianceList.size();i++) { //This will delete appliances with the same ID. Pls fix! It should remove a specific appliance!
-							if(applianceList.get(i).getID().equals(userInput)) {
-								applianceList.remove(i);
-								break;
-							}						
 						}
 					}
 				}
@@ -104,19 +116,25 @@ public class AppClient {
 			}
 			else if (userInput.equals("G")) {
 				//Generate
-				ApplianceGenerator.main(args);
 				try {
+					ApplianceGenerator.main(args);
 					File myfile = new File("output.txt");
 					Scanner scanner = new Scanner(myfile);
 					for(int i=0;i<applianceList.size();i++) {
 						String fileInput = scanner.nextLine();
-						String []array = fileInput.split(",");
-						ApplianceList.add(new RegularAppliance(inputArray[0], inputArray[1], inputArray[2], inputArray[3], inputArray[4], inputArray[5]));
-					}						
+						String []inputArray = fileInput.split(",");
+						applianceList.add(new RegularAppliance(Integer.parseInt(inputArray[0]), 
+															   inputArray[1], 
+															   Integer.parseInt(inputArray[2]), 
+															   Double.parseDouble(inputArray[3]), 
+															   Boolean.parseBoolean(inputArray[4]), 
+															   Double.parseDouble(inputArray[5])));
+					}
+					scanner.close();
 				}
-				}
+				
 				catch(IOException ioe) {
-					System.out.println("File not found");
+					System.out.println("/// ERROR: Program cannot find the file \"ApplianceDetail.txt\" used for generating appliances ///");
 				}
 				appMenu();
 
@@ -161,7 +179,7 @@ public class AppClient {
 				}
 				System.out.println("Starting simulation");
 				
-				Simulate.main(ApplianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
+				Simulate.main(applianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
 				
 			}
 			else if (userInput.equals("Q")) {
@@ -179,17 +197,17 @@ public class AppClient {
 	
 	public static void appMenu() {
 		System.out.println("Select an option:");
-		System.out.println("\t Type \"A\" Add an appliance");
-		System.out.println("\t Type \"D\" Delete an appliance");	
-		System.out.println("\t Type \"L\" Print the appliances");
-		System.out.println("\t Type \"G\" Generate text file");
-		System.out.println("\t Type \"X\" Delete all appliances");
-		System.out.println("\t Type \"S\" To Start the simulation");
-		System.out.println("\t Type \"Q\" Quit the program");
+		System.out.println("/// Type \"A\" Add an appliance");
+		System.out.println("/// Type \"D\" Delete an appliance");	
+		System.out.println("/// Type \"L\" Print the appliances");
+		System.out.println("/// Type \"G\" Generate text file");
+		System.out.println("/// Type \"X\" Delete all appliances");
+		System.out.println("/// Type \"S\" To Start the simulation");
+		System.out.println("/// Type \"Q\" Quit the program");
 	}
 	
 	public static String wrongInputDisplay() {
-		String output = "/// Wrong input /// \n";
+		String output = "/// ERROR: Wrong input /// \n";
 		return output;
 	}
 

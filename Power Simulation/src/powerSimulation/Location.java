@@ -38,8 +38,8 @@ public class Location {
 	public static ArrayList<Integer> getLocationIDList(ArrayList<RegularAppliance> regularApplianceList) {
 		ArrayList<Integer> locationIDList = new ArrayList<Integer>();
 		for(RegularAppliance i : regularApplianceList) {
-			if(!locationIDList.contains(i.getLocation())) {
-				locationIDList.add(i.getLocation());
+			if(!locationIDList.contains(i.getLocationID())) {
+				locationIDList.add(i.getLocationID());
 			}
 		}
 		return locationIDList;
