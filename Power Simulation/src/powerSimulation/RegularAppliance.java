@@ -12,8 +12,23 @@ package powerSimulation;
 	
 	*/
 public class RegularAppliance extends Appliance{
-	RegularAppliance() {
-		//stuff
+	private int ID;
+	
+	public RegularAppliance(int ID, String n, int on, int off, double pOn, boolean s, double pSmart){
+		super(n, on, off, pOn, s, pSmart);
+		this.ID = ID;
 	}
-	//stuff
+	
+	public void setID(int id) {
+		ID = id;
+	}
+	
+	public int getID() {
+		return ID;
+	}
+	
+	@Override
+	public String toString() {
+		return "RegularAppliance [ID=" + ID + "]";
+	}
 }

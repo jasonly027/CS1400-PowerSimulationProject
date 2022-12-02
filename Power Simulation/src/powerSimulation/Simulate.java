@@ -2,6 +2,7 @@ package powerSimulation;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Simulate {
 	
@@ -13,6 +14,11 @@ public class Simulate {
 	}
 	
 	public static void main(ArrayList<RegularAppliance> ApplianceList, int maxWattage, int timeSteps) {
+		
+		ArrayList<RegularAppliance> AppOn = new ArrayList<RegularAppliance>(); //Arraylist of appliances that are "ON"
+		ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //Arraylist of appliances that are "ON" and are smart
+		int totalWattage; //stores total amount of wattage when all appliances are "ON"
+		
 		for(int currentStep=0; currentStep<timeSteps; ++currentStep) {
 //------------------------------------------------------------------------------------------------------//
 					///////////////////////////
@@ -23,13 +29,25 @@ public class Simulate {
 			//Populate "ON" appliances list
 			ArrayList<RegularAppliance> ON_ApplianceList = new ArrayList<RegularAppliance>();
 			
-			//Calculate total wattage of "ON" list
-			int totalWattage;
+			Random randGen = new Random();
+			for(int j = 0; j < ApplianceList.size(); ++j){
+				
+				if(ApplianceList.get(j).getprobOn() >= randGen.nextDouble()){
+					AppOn.add(new RegularAppliance(ApplianceList.get(j).getID(), ApplianceList.get(j).getName(),ApplianceList.get(j).getOnW(), ApplianceList.get(j).getProbOn(), ApplianceList.get(j).isSmart(), ApplianceList.get(j).getProbSmart()));
+				}
+			}
+			
+			//Calculate sum wattage of "ON" list
+			
+			totalWattage = 0;
+			for(int i = 0; i < AppOn.size(); ++i){
+				totalWattage += AppOn.get(i).getOnW();
+			}
 			
 			//Check if <= max wattage 
 			if(totalWattage <= maxWattage) {
 				ReportPrint();
-				continue;
+				continue
 			}
 //-----------------------------------------------------------------------------------------------------//
 					////////////////////////
@@ -39,10 +57,9 @@ public class Simulate {
 			
 			else 
 			{
+				ArrayList <SmartAppliance> smartAppliances1 = new ArrayList<SmartAppliance>(); //a copy of smart appliance arraylist
+				ArrayList <SmartAppliance> SmartApplianceOrganized = new ArrayList<SmartAppliance>(); //organized list of smart appliances in decreasing order based on their wat reduction
 				
-				ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //this here lists all the smart appliances.
-				ArrayList <SmartAppliance> smartAppliances1 = new ArrayList<SmartAppliance>(); //a copy of the array above, do not use this! I will empty this array!
-				ArrayList <SmartAppliance> SmartApplianceOrganized = new ArrayList<SmartAppliance>(); //organized list of smart appliances in decreasing order based on their watt reduction
 				int totalChangesSmart = 0;
 				int totalWattage = 0;
 				
@@ -51,10 +68,9 @@ public class Simulate {
 				//----------------------------------------------------------
 				
 				int counter = 0;
-				for(int i = 0; i < ApplianceList.size(); i++)
+				for(int i = 0; i < AppON.size(); i++)
 				{
-					totalWattage = totalWattage + ApplianceList.get(i).getOnW();//This is for calculations, but this will be calculated in earlier part
-					if(ApplianceList.get(i).isSmart())
+					if(AppOn.get(i).isSmart())
 					{
 						//SmartAppliance(int id, String name, int o, double pOn1, boolean sm, double pSmart)
 						SmartAppliances.add(new SmartAppliance(ApplianceList.get(i).getID(), ApplianceList.get(i).getName(),ApplianceList.get(i).getOnW(), ApplianceList.get(i).getProbOn(), ApplianceList.get(i).isSmart(), ApplianceList.get(i).getProbSmart() ));
@@ -115,7 +131,7 @@ public class Simulate {
 				//----------------------------------------------------------
 				//Step 4: Report these changes - if any. If not, procced to Part D
 				//----------------------------------------------------------
-				if(totalChangesSmart != 0)
+				if(totalChangesSmart != SmartApplianceOrganized.size())
 				{
 					ReportPrint();
 				}

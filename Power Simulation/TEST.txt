@@ -1,0 +1,10 @@
+10000001,Refrigerator - 21 cu.ft. - Frostfree,572,1.0,true,0.25
+10000001,Lawn Equipment - Weed Eater,500,0.05,false,0.0
+10000001,Laptop,75,0.25,true,0.5
+10000002,Freezer - Upright/Chest 17 cu. ft,600,0.2,true,0.25
+10000002,Oven,5000,1.0,false,0.0
+10000002,VCR,45,0.05,false,0.0
+10000002,Dishwasher (Without Dry Cycle),200,0.025,true,0.25
+10000003,Telephone - Cordless,5,0.167,false,0.0
+10000003,Vacuum - Regular,1440,1.0,false,0.0
+10000003,Air Conditioner - 10000 BTU,1000,0.025,true,0.5
