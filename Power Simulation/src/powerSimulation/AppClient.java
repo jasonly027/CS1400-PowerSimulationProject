@@ -17,7 +17,7 @@ public class AppClient {
 	
 	public static void main(String[] args) {
 		Scanner scnr = new Scanner(System.in);
-		//ArrayList<RegularAppliance> ApplianceList = new ArrayList<>();
+		ArrayList<RegularAppliance> ApplianceList = new ArrayList<>();
 		
 		appMenu();
 		while(true) {
@@ -67,7 +67,7 @@ public class AppClient {
 							continue;
 						}
 						
-						//ApplianceList.add();
+						ApplianceList.add(new RegularAppliance(inputArray[0], inputArray[1], inputArray[2], inputArray[3], inputArray[4], inputArray[5]));
 					}
 				}
 				
@@ -87,33 +87,33 @@ public class AppClient {
 							System.out.println(wrongInputDisplay());
 							continue;
 						}
-//						for(int i=0;i<applianceList.size();i++) { //This will delete appliances with the same ID. Pls fix! It should remove a specific appliance!
-//							if(applianceList.get(i).getID().equals(userInput)) {
-//								applianceList.remove(i);
-//								break;
-//							}						
-//						}
+						for(int i=0;i<applianceList.size();i++) { //This will delete appliances with the same ID. Pls fix! It should remove a specific appliance!
+							if(applianceList.get(i).getID().equals(userInput)) {
+								applianceList.remove(i);
+								break;
+							}						
+						}
 					}
 				}
 			}
 			else if (userInput.equals("L")) {
 				//Print List
-//				for(int i=0;i<applianceList.size();i++) {
-//					System.out.println(applianceList.get(i));
-//				}
+				for(int i=0;i<applianceList.size();i++) {
+					System.out.println(applianceList.get(i));
+				}
 			}
 			else if (userInput.equals("G")) {
 				//Generate
-//				ApplianceGenerator.main(args);
+				ApplianceGenerator.main(args);
 				try {
 					File myfile = new File("output.txt");
 					Scanner scanner = new Scanner(myfile);
-//					for(int i=0;i<applianceList.size();i++) {
+					for(int i=0;i<applianceList.size();i++) {
 						String fileInput = scanner.nextLine();
 						String []array = fileInput.split(",");
-//						applianceList.add(new );
-//					}						
-//				}
+						ApplianceList.add(new RegularAppliance(inputArray[0], inputArray[1], inputArray[2], inputArray[3], inputArray[4], inputArray[5]));
+					}						
+				}
 				}
 				catch(IOException ioe) {
 					System.out.println("File not found");
@@ -123,8 +123,8 @@ public class AppClient {
 			}
 			else if (userInput.equals("X")) {
 				//Empty
-//				applianceList.clear();
-//				applianceList.trimToSize();
+				applianceList.clear();
+				applianceList.trimToSize();
 			}
 			else if (userInput.equals("S")) {
 				//Simulation
@@ -161,7 +161,7 @@ public class AppClient {
 				}
 				System.out.println("Starting simulation");
 				
-				//Simulate.main(ApplianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
+				Simulate.main(ApplianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
 				
 			}
 			else if (userInput.equals("Q")) {
@@ -181,9 +181,9 @@ public class AppClient {
 		System.out.println("Select an option:");
 		System.out.println("\t Type \"A\" Add an appliance");
 		System.out.println("\t Type \"D\" Delete an appliance");	
-		System.out.println("\t Type \"L\" List the appliances");
+		System.out.println("\t Type \"L\" Print the appliances");
+		System.out.println("\t Type \"G\" Generate text file");
 		System.out.println("\t Type \"X\" Delete all appliances");
-		System.out.println("\t Type \"F\" Read Appliances from a file");
 		System.out.println("\t Type \"S\" To Start the simulation");
 		System.out.println("\t Type \"Q\" Quit the program");
 	}
