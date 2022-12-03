@@ -149,6 +149,31 @@ public class AppClient {
 				System.out.println("Successfully added randomly generated appliances to the appliance list\n");
 				appMenu();
 			}
+			else if (userInput.equals("F")) {
+				while(true) {
+					userInput = scnr.nextLine();
+					try {
+						File myfile = new File(userInput);
+						Scanner scanner = new Scanner(myfile);
+						while(scanner.hasNextLine()) {
+							String fileInput = scanner.nextLine();
+							String []inputArray = fileInput.split(",");
+							applianceList.add(new RegularAppliance(Integer.parseInt(inputArray[0]), 
+																   inputArray[1], 
+																   Integer.parseInt(inputArray[2]), 
+																   Double.parseDouble(inputArray[3]), 
+																   Boolean.parseBoolean(inputArray[4]), 
+																   Double.parseDouble(inputArray[5])));
+						}
+						scanner.close();
+						break;
+						
+					}catch (IOException ioe) {
+						System.out.println("/// ERROR: Program cannot find a file at the location \"" + userInput + "\"\n");
+					}
+					
+				}
+			}
 			else if (userInput.equals("X")) {
 				//Empty
 				applianceList.clear();
