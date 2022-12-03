@@ -20,11 +20,6 @@ public class Simulate {
 	}
 	
 	public static void main(ArrayList<RegularAppliance> applianceList, int maxWattage, int timeSteps) {
-		
-//		ArrayList<RegularAppliance> appOn = new ArrayList<RegularAppliance>(); //Arraylist of appliances that are "ON"
-//		ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //Arraylist of appliances that are "ON" and are smart
-//		int totalWattage; //stores total amount of wattage when all appliances are "ON"
-		
 		for(int currentStep=0; currentStep<timeSteps; ++currentStep) {
 //------------------------------------------------------------------------------------------------------//
 					///////////////////////////
@@ -38,7 +33,7 @@ public class Simulate {
 			Random randGen = new Random();
 			for(int j = 0; j < applianceList.size(); ++j){
 				
-				if(applianceList.get(j).getProbOn() <= 0.01*(randGen.nextInt(100)+1)){
+				if(/*applianceList.get(j).getProbOn() <= 0.01*(randGen.nextInt(100)+1)*/     true){
 					appOn.add(new RegularAppliance(applianceList.get(j).getLocationID(), applianceList.get(j).getAppName(),applianceList.get(j).getOnW(), applianceList.get(j).getProbOn(), applianceList.get(j).getSmart(), applianceList.get(j).getProbSmart()));
 				}
 			}
@@ -116,8 +111,8 @@ public class Simulate {
 				//----------------------------------------------------------
 				//Step 3: Iterate through organized smart appliance array and minus the difference from total wattage. Keep doing so until reach max wattage
 				//----------------------------------------------------------
+				System.out.println("Total Wattage if all are on: " + totalWattage);
 				int totalWattWhenLow = totalWattage; //total wattage when smart appliances are set to low
-				System.out.println("Total Wattage if all are on:" + totalWattWhenLow);
 				for(int i = 0; i < SmartApplianceOrganized.size();i++)
 				{
 					totalWattWhenLow = totalWattWhenLow - SmartApplianceOrganized.get(i).getDifference();
@@ -133,13 +128,12 @@ public class Simulate {
 						totalChangesSmart++;
 					}
 				}
-				
+System.out.println("/--Total Wattage after smart on LOW: " + totalWattWhenLow);				
 //-----------------------------------------------------------------------------------------------------//
 					////////////////////////
 					// PART D STARTS HERE //
 					////////////////////////
 //------------------------------------------------------------------------------------------------------//
-			
 				if(totalWattWhenLow > maxWattage) 
 				{	
 					//Create list of all location numbers then create location objects based off those numbers
@@ -171,31 +165,44 @@ public class Simulate {
 							}
 						}
 					}
-					
+int sumLoc=0;
+for(Location location : locationList) {
+	System.out.println("|   LocID:" + location.getLocationID() + " Wattage:" + location.getSumWattage());
+	sumLoc += location.getSumWattage();
+}
+System.out.println("\\--Sum of each location's wattage: " + sumLoc + " (Sum of locations listed above)\n");
 					//Find the min location and subtract from total system's wattage (totalWattWhenLow)
-					while(totalWattWhenLow > maxWattage) 
+					Location minLocation = new Location(-1);
+					int minWattLocPos = -1;
+					while(totalWattWhenLow > maxWattage)
 					{
-						int minLocationWattage = Integer.MAX_VALUE;
-						Location minLocation = new Location(-1);
-						for(Location location : locationList) 
+						minLocation.setSumWattage(Integer.MAX_VALUE);
+						for(int i=0; i<locationList.size(); ++i)
 						{
-							if(location.getSumWattage() < minLocationWattage && !location.getIsBrowned()) 
+							if(locationList.get(i).getSumWattage() < minLocation.getSumWattage() && !locationList.get(i).getIsBrowned())
 							{
-								minLocationWattage = location.getSumWattage();
-								minLocation = location;
-								location.setIsBrowned(true);
+								minLocation.setSumWattage(locationList.get(i).getSumWattage());
+								minWattLocPos = i;
 							}
 						}
-						totalWattWhenLow -= minLocationWattage;
-						ReportLocations.add(minLocation);
+						totalWattWhenLow -= minLocation.getSumWattage();
+						locationList.get(minWattLocPos).setIsBrowned(true);
+						ReportLocations.add(locationList.get(minWattLocPos));
 					}
 				}
 			}
-//			ReportPrint();
-//			ReportSmartAppliances.clear();
-//			ReportSmartAppliances.trimToSize();
-//			ReportLocations.clear();
-//			ReportLocations.trimToSize();
+			ReportPrint();
+			ReportSmartAppliances.clear();
+			ReportSmartAppliances.trimToSize();
+			ReportLocations.clear();
+			ReportLocations.trimToSize();
+			
+			System.out.println("\n/------------------\\");
+			System.out.println("|                  |");
+			System.out.println("| End of time step " + (currentStep+1));
+			System.out.println("|                  |");
+			System.out.println("\\------------------/\n");
 		}
+		System.out.println("Simulation Ended\n");
 	}
 }

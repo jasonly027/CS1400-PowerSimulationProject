@@ -2,7 +2,6 @@ package powerSimulation;
 
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.lang.NumberFormatException;
 import java.io.File;
 import java.io.IOException;
 
@@ -151,7 +150,12 @@ public class AppClient {
 			}
 			else if (userInput.equals("F")) {
 				while(true) {
+					System.out.println("Input path to text file or type \"C\" to quit\n");
 					userInput = scnr.nextLine();
+					if(userInput.equals("C")) {
+						appMenu();
+						break;
+					}
 					try {
 						File myfile = new File(userInput);
 						Scanner scanner = new Scanner(myfile);
@@ -166,12 +170,19 @@ public class AppClient {
 																   Double.parseDouble(inputArray[5])));
 						}
 						scanner.close();
+						System.out.println("Appliances from text file have been successfully added\n");
+						appMenu();
 						break;
 						
 					}catch (IOException ioe) {
-						System.out.println("/// ERROR: Program cannot find a file at the location \"" + userInput + "\"\n");
+						System.out.println("/// ERROR: Program cannot find a file at the location \"" + userInput + "\" ///\n");
 					}
-					
+					catch (ArrayIndexOutOfBoundsException e) {
+						System.out.println("/// ERROR: Text file has improper formatting ///\n");
+					}
+					catch (NumberFormatException e) {
+						System.out.println("/// ERROR: Text file has improper formatting ///\n");
+					}
 				}
 			}
 			else if (userInput.equals("X")) {
@@ -222,7 +233,7 @@ public class AppClient {
 				System.out.println("Starting simulation\n");
 				
 				Simulate.main(applianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
-				
+				appMenu();
 			}
 			else if (userInput.equals("Q")) {
 				//Quit
@@ -244,6 +255,7 @@ public class AppClient {
 		System.out.println("/// Type \"D\" to delete an appliance from the appliance list");	
 		System.out.println("/// Type \"L\" to print the appliance list");
 		System.out.println("/// Type \"G\" to add randomly generated appliances to the appliance list");
+		System.out.println("/// Type \"F\" to add appliances from a text file");
 		System.out.println("/// Type \"X\" to empty the appliance list");
 		System.out.println("/// Type \"S\" to start the simulation");
 		System.out.println("/// Type \"Q\" to quit the program");
@@ -251,7 +263,7 @@ public class AppClient {
 	}
 	
 	public static String wrongInputDisplay() {
-		String output = "/// ERROR: Invalid input /// \n";
+		String output = "/// ERROR: Invalid input ///\n";
 		return output;
 	}
 
