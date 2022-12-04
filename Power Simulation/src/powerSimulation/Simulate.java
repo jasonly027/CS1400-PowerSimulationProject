@@ -128,7 +128,15 @@ public class Simulate {
 						totalChangesSmart++;
 					}
 				}
-System.out.println("/--Total Wattage after smart on LOW: " + totalWattWhenLow);				
+				
+				int reportWatts = totalWattage;
+				for(int i = 0; i < ReportSmartAppliances.size();i++)
+				{
+					reportWatts -= ReportSmartAppliances.get(i).getDifference();
+					totalChangesSmart++;
+				}
+
+				System.out.println("/--Total Wattage after smart on LOW: " + reportWatts);			
 //-----------------------------------------------------------------------------------------------------//
 					////////////////////////
 					// PART D STARTS HERE //
