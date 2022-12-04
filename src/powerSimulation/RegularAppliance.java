@@ -20,6 +20,11 @@ public class RegularAppliance extends Appliance{
 		this.ID = IDCounter++;
 	}
 	
+	public RegularAppliance(int locID, String n, int on, double pOn, boolean s, double pSmart, int ID){
+		super(locID, n, on, pOn, s, pSmart);
+		this.setID(ID);
+	}
+	
 	public void setID(int id) {
 		ID = id;
 	}

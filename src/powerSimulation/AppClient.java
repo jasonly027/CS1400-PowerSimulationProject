@@ -230,9 +230,9 @@ public class AppClient {
 				}
 					break;
 				}
-				System.out.println("< - - - Starting simulation - - - >\n");
-				
+				System.out.println("< - - - Simulation Start - - - >\n");
 				Simulate.main(applianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
+				System.out.println("< - - - Simulation End - - - >\n");
 				appMenu();
 			}
 			else if (userInput.equals("Q")) {

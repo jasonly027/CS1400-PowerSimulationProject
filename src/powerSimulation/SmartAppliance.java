@@ -29,6 +29,12 @@ public class SmartAppliance extends RegularAppliance{
 		this.setDifference(super.getOnW() - this.getWattageOnLow());
 	}
 	
+	public SmartAppliance(int locID, String n, int on, double pOn, boolean s, double pSmart, int ID) {
+		super(locID, n, on, pOn, s, pSmart, ID);
+		this.setWattageOnLow((int)Math.round(super.getOnW() - (super.getProbSmart()*super.getOnW())));
+		this.setDifference(super.getOnW() - this.getWattageOnLow());
+	}
+	
 	public void setOnLow(boolean on) {
 		onLow = on;
 	}
