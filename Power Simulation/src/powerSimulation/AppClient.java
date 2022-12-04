@@ -230,7 +230,7 @@ public class AppClient {
 				}
 					break;
 				}
-				System.out.println("Starting simulation\n");
+				System.out.println("< - - - Starting simulation - - - >\n");
 				
 				Simulate.main(applianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
 				appMenu();
