@@ -14,21 +14,24 @@ public class Simulate {
 	private static ArrayList<Location> reportLocations = new ArrayList<Location>();
 	private static int reportFileNo = 0;
 	private static int currentStep;
+	private static int timeSteps;
 	
 	private static void ReportPrint(int maxWattage, int totalWattage, int totalWattageChanged) {
 		//Prints to console
 		System.out.println("/// Time Step [" + (currentStep+1) + "] ///");
 		System.out.printf("Max Allowed Wattage: %,d\t\t\tTotal Wattage before changes: %,d\t\t\tTotal Wattage after changes: %,d\n",maxWattage,totalWattage,totalWattageChanged);
-		System.out.printf("Smart Appliances turned to low: %d\t\t\tLocations browned out: %d",reportSmartAppliances.size(),reportLocations.size());
+		System.out.printf("Smart Appliances turned to low: %,d\t\t\tLocations browned out: %,d",reportSmartAppliances.size(),reportLocations.size());
 		if(reportLocations.size() > 0)
 		{
-			System.out.printf("\t\t\tHighest Impact Location Affected: %d with %d watts\n\n",reportLocations.get(reportLocations.size()-1).getLocationID(),reportLocations.get(reportLocations.size()-1).getSumWattage());
+			System.out.printf("\t\t\tHighest Impact Location Affected: %d with %,d watts\n\n",reportLocations.get(reportLocations.size()-1).getLocationID(),reportLocations.get(reportLocations.size()-1).getSumWattage());
 		}
-		System.out.println("*Check Detailed Simulation Reports folder for more info*\n");
+		else {
+			System.out.print("\n\n");
+		}
 		//Prints to text file
 		
 		//Create folder for text files
-		File reportFolder = new File("Detailed Simulation Reports");
+		File reportFolder = new File("Detailed Reports");
 		reportFolder.mkdir();
 		
 		//Check if file name is taken
@@ -50,17 +53,18 @@ public class Simulate {
 			pw.println("/// Time Step [" + (currentStep+1) + "] ///");
 			pw.printf("Max Allowed Wattage: %,d\t\t\tTotal Wattage before changes: %,d\t\t\tTotal Wattage after changes: %,d\n",maxWattage,totalWattage,totalWattageChanged);
 			pw.printf("Smart Appliances turned to low: %d\t\t\tLocations browned out: %d\n\n",reportSmartAppliances.size(),reportLocations.size());
-			pw.println("Smart Appliances turned to \"LOW\":");
-				pw.printf("| ID   | Location | Name                                             | Wattage    | Reduction  |\n");
+			pw.println("Smart Appliances turned to low:");
+			pw.printf("| ID   | Location | Name                                             | Wattage    | Reduction  |\n");
 			for(SmartAppliance smartAppliance : reportSmartAppliances)
 			{
 				pw.printf("| %-4d | %-8d | %-48s | %4d watts | %4d watts |\n", 
 						smartAppliance.getID(),smartAppliance.getLocationID(),smartAppliance.getAppName(),smartAppliance.getOnW(),smartAppliance.getDifference());
 			}
 			pw.println("\nLocations browned out:");
+			pw.printf("| Location | Wattage     |\n");
 			for(Location location : reportLocations)
 			{
-				pw.printf("| Location: %-8d | Wattage: %5d watts |\n",location.getLocationID(),location.getSumWattage());
+				pw.printf("| %-8d | %5d watts |\n",location.getLocationID(),location.getSumWattage());
 			}
 			pw.print("\n\n\n\n\n\n\n\n\n\n");
 			pw.close();
@@ -72,10 +76,15 @@ public class Simulate {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		if(currentStep == timeSteps-1) {
+			System.out.println("*Check \"" + reportFile.getAbsolutePath() + "\" for more info*\n");
+		}
 	}
 	
 	public static void main(ArrayList<RegularAppliance> applianceList, int maxWattage, int timeSteps) {
-		for(currentStep=0; currentStep<timeSteps; ++currentStep) {
+		Simulate.timeSteps = timeSteps;
+		for(currentStep=0; currentStep<Simulate.timeSteps; ++currentStep) {
 //------------------------------------------------------------------------------------------------------//
 					///////////////////////////
 					/// PART A+B STARTS HERE //

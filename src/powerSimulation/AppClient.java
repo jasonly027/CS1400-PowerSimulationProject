@@ -17,8 +17,9 @@ public class AppClient {
 		Scanner scnr = new Scanner(System.in);
 		ArrayList<RegularAppliance> applianceList = new ArrayList<>();
 		
-		appMenu();
+		
 		while(true) {
+			appMenu();
 			String userInput = scnr.nextLine();
 			if (userInput.equals("A")) {
 				//Add
@@ -35,7 +36,6 @@ public class AppClient {
 					System.out.println("                    10000002,Laptop,0.20,true,0.23\n");
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
-						appMenu();
 						break;
 					}else {
 						String []inputArray= userInput.split(",");
@@ -90,13 +90,11 @@ public class AppClient {
 				while(true) {
 					if(applianceList.size() == 0) {
 						System.out.println("/// ERROR: Cannot use this option if the appliance list is empty ///\n");
-						appMenu();
 						break;
 					}
 					System.out.println("Input valid appliance ID or type \"C\" to quit\n");
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
-						appMenu();
 						break;
 					}else {
 						try {
@@ -121,7 +119,6 @@ public class AppClient {
 					System.out.println("/// " + applianceList.get(i));
 				}
 				System.out.println();
-				appMenu();
 			}
 			else if (userInput.equals("G")) {
 				//Generate
@@ -146,14 +143,12 @@ public class AppClient {
 					System.out.println("/// ERROR: Program cannot find the file \"ApplianceDetail.txt\" used for generating appliances ///\n");
 				}
 				System.out.println("Successfully added randomly generated appliances to the appliance list\n");
-				appMenu();
 			}
 			else if (userInput.equals("F")) {
 				while(true) {
 					System.out.println("Input path to text file or type \"C\" to quit\n");
 					userInput = scnr.nextLine();
 					if(userInput.equals("C")) {
-						appMenu();
 						break;
 					}
 					try {
@@ -171,7 +166,6 @@ public class AppClient {
 						}
 						scanner.close();
 						System.out.println("Appliances from text file have been successfully added\n");
-						appMenu();
 						break;
 						
 					}catch (IOException ioe) {
@@ -190,12 +184,10 @@ public class AppClient {
 				applianceList.clear();
 				applianceList.trimToSize();
 				System.out.println("Appliance list successfully emptied\n");
-				appMenu();
 			}
 			else if (userInput.equals("S")) {
 				if(applianceList.size() == 0) {
-					System.out.println("/// ERROR: Cannot use this option if the appliance list is empty ///\n");
-					appMenu();
+					System.out.println("/// ERROR: Cannot use this option if the appliance list is empty ///\n");
 					continue;
 				}
 				//Simulation
@@ -233,7 +225,6 @@ public class AppClient {
 				System.out.println("< - - - Simulation Start - - - >\n");
 				Simulate.main(applianceList, Integer.parseInt(maxWatts), Integer.parseInt(timeSteps));
 				System.out.println("< - - - Simulation End - - - >\n");
-				appMenu();
 			}
 			else if (userInput.equals("Q")) {
 				//Quit
@@ -243,7 +234,6 @@ public class AppClient {
 			else {
 				//Re-prompt
 				System.out.println(wrongInputDisplay());
-				appMenu();
 			}
 		}
 	}
