@@ -16,6 +16,15 @@ public class Simulate {
 	private static int currentStep;
 	private static int timeSteps;
 	
+	/**
+	 * {@code private static void ReportPrint(int maxWattage, int totalWattage, int totalWattageChanged)}
+	 * <p>
+	 * Print summarized information regarding to the changes the algorithm made to the appliances/locations to the console.
+	 * Afterwards, print a more detailed report to a text file.
+	 * @param maxWattage The maximum wattage permitted for the system
+	 * @param totalWattage The total wattage if no changes were made to applications/locations
+	 * @param totalWattageChanged The total wattage after changes were made to applications/locations so that it is less than or equal to the maximum wattage
+	 */
 	private static void ReportPrint(int maxWattage, int totalWattage, int totalWattageChanged) {
 		//Prints to console
 		System.out.println("/// Time Step [" + (currentStep+1) + "] ///");
@@ -28,13 +37,15 @@ public class Simulate {
 		else {
 			System.out.print("\n\n");
 		}
+		
 		//Prints to text file
 		
 		//Create folder for text files
 		File reportFolder = new File("Detailed Reports");
 		reportFolder.mkdir();
 		
-		//Check if file name is taken
+		//If this is the first time step of the simulation, check if the file name is taken
+		//If the file name is taken, create a new name for the file
 		File reportFile = new File(reportFolder,"Report" + reportFileNo + ".txt");
 		if(currentStep == 0)
 		{
@@ -77,6 +88,7 @@ public class Simulate {
 			e.printStackTrace();
 		}
 		
+		//If on the last time step, reference the location of the detailed report text file
 		if(currentStep == timeSteps-1) {
 			System.out.println("*Check \"" + reportFile.getAbsolutePath() + "\" for more info*\n");
 		}
@@ -85,13 +97,8 @@ public class Simulate {
 	public static void main(ArrayList<RegularAppliance> applianceList, int maxWattage, int timeSteps) {
 		Simulate.timeSteps = timeSteps;
 		for(currentStep=0; currentStep<Simulate.timeSteps; ++currentStep) {
-//------------------------------------------------------------------------------------------------------//
-					///////////////////////////
-					/// PART A+B STARTS HERE //
-					///////////////////////////
-//------------------------------------------------------------------------------------------------------//
 			
-			//Populate "ON" appliances list
+			//Populate "on" appliances list
 			ArrayList<RegularAppliance> appOn = new ArrayList<RegularAppliance>();
 			
 			Random randGen = new Random();
@@ -102,53 +109,45 @@ public class Simulate {
 				}
 			}
 			
-			//Calculate sum wattage of "ON" list
-			
+			//Calculate sum wattage of "on" list
 			int totalWattage = 0;
 			for(int i = 0; i < appOn.size(); ++i){
 				totalWattage += appOn.get(i).getOnW();
 			}
 			int totalWattageChanged = totalWattage;
 			
-			//Check if <= max wattage 
+			//Check if the total wattage is less than or equal to the maximum permitted wattage
+			//If it is, print the summarized and detailed reports and continue to the next time step
 			if(totalWattage <= maxWattage) {
 				ReportPrint(maxWattage,totalWattage,totalWattageChanged);
 				continue;
 			}
-//-----------------------------------------------------------------------------------------------------//
-					////////////////////////
-					// PART C STARTS HERE //
-					////////////////////////
-//------------------------------------------------------------------------------------------------------//
 			
+			//If the total wattage is greater than the maximum permitted wattage, make changes to
+			//applications/locations to make it under the maximum wattage
 			else 
 			{
 				ArrayList <SmartAppliance> SmartAppliances = new ArrayList<SmartAppliance>(); //Arraylist of appliances that are "ON" and are smart
 				ArrayList <SmartAppliance> smartAppliances1 = new ArrayList<SmartAppliance>(); //a copy of smart appliance arraylist
 				ArrayList <SmartAppliance> SmartApplianceOrganized = new ArrayList<SmartAppliance>(); //organized list of smart appliances in decreasing order based on their wat reduction
 				
-				//----------------------------------------------------------
-				//Step 1: Find all the appliances that are smart and store it in a separate arraylist
-				//----------------------------------------------------------
-				
+				//Iterate through the "on" appliances list and create smart appliance objects from the appliances that are smart
+				//Add the created smart appliance objects to two smart appliance lists
 				int counter = 0;
 				for(int i = 0; i < appOn.size(); i++)
 				{
 					if(appOn.get(i).getSmart())
 					{
-						//SmartAppliance(int id, String name, int o, double pOn1, boolean sm, double pSmart)
+						//Position value keeps track of the index where the smart appliance is in smart appliance array. 
 						SmartAppliances.add(new SmartAppliance(applianceList.get(i).getLocationID(), applianceList.get(i).getAppName(),applianceList.get(i).getOnW(), applianceList.get(i).getProbOn(), applianceList.get(i).getSmart(), applianceList.get(i).getProbSmart(), applianceList.get(i).getID() ));
-						SmartAppliances.get(counter).setPosition(counter);//Position value keeps track of the index where the smart appliance is in smart appliance array. 
+						SmartAppliances.get(counter).setPosition(counter);
 						smartAppliances1.add(new SmartAppliance(applianceList.get(i).getLocationID(), applianceList.get(i).getAppName(),applianceList.get(i).getOnW(), applianceList.get(i).getProbOn(), applianceList.get(i).getSmart(), applianceList.get(i).getProbSmart(), applianceList.get(i).getID() ));
 						smartAppliances1.get(counter).setPosition(counter);
 						counter++;
 					}
 				}
 				
-				//----------------------------------------------------------
-				//Step 2: Organize smart appliance array based on their wattage reduction when set to low
-				//----------------------------------------------------------
-				
+				//Sort the smart appliance list in the order of smallest watt reduction when turned to "low" to highest watt reduction when turned to "low"
 				counter = 0;
 				int min = smartAppliances1.get(0).getDifference();
 				int placement = 0;
@@ -169,12 +168,12 @@ public class Simulate {
 					counter++;
 				}
 				
-				smartAppliances1 = null; //erases smartAppliances1 array
+				//The temporary smart appliance list used for sorting is destroyed
+				smartAppliances1 = null;
 				
-				//----------------------------------------------------------
-				//Step 3: Iterate through organized smart appliance array and minus the difference from total wattage. Keep doing so until reach max wattage
-				//----------------------------------------------------------
-//				System.out.println("/--Total Wattage if all are on: " + totalWattage);
+				//Turn the least impactful smart appliance that has not been turned to "low" to "low"
+				//Continue doing the above until the total wattage of the system is less than the max wattage
+				//or all the smart appliances have been turned to "low"
 				for(int i = 0; i < SmartApplianceOrganized.size();i++)
 				{
 					totalWattageChanged = totalWattageChanged - SmartApplianceOrganized.get(i).getDifference();
@@ -189,27 +188,11 @@ public class Simulate {
 					}
 				}
 				
-//// TEMP ///////////////////////////////////////////////////////////////////////////////////////////////////////
-//int reportWatts = totalWattage;
-//int sumSMT = 0;
-//for(int i = 0; i < reportSmartAppliances.size();i++)
-//{
-//	reportWatts -= reportSmartAppliances.get(i).getDifference();
-//	sumSMT += reportSmartAppliances.get(i).getDifference();
-//	System.out.println("| ID:" + reportSmartAppliances.get(i).getID() + " Difference:" + reportSmartAppliances.get(i).getDifference());
-//}
-//System.out.println("\\--Sum of smart appliances that were turned to \"LOW\"'s differences: " + sumSMT + "(above)");
-//System.out.println("\\--Total Wattage after smart on LOW: " + reportWatts + "\n");
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//-----------------------------------------------------------------------------------------------------//
-					////////////////////////
-					// PART D STARTS HERE //
-					////////////////////////
-//------------------------------------------------------------------------------------------------------//
+				//If the total wattage of the system is still greater than the maximum permitted wattage, 
+				//Brown out locations until you are under the max wattage
 				if(totalWattageChanged > maxWattage) 
 				{	
-					//Create list of all location numbers then create location objects based off those numbers
+					//Create a list of all the location ID's then create location objects based off those location ID's
 					ArrayList<Integer> locationIDList = Location.getLocationIDList(appOn);
 					ArrayList<Location> locationList = new ArrayList<Location>();
 					for(int i=0; i<locationIDList.size(); ++i) 
@@ -217,7 +200,7 @@ public class Simulate {
 						locationList.add(new Location(locationIDList.get(i)));
 					}
 					
-					//Add the wattage of each appliance to their respective location (object)
+					//Add the wattage of each appliance to their respective location object
 					for(int i=0; i<appOn.size(); ++i) 
 					{
 						RegularAppliance currentAppliance = appOn.get(i);
@@ -239,16 +222,7 @@ public class Simulate {
 						}
 					}
 					
-//// TEMP ///////////////////////////////////////////////////////////////////////////////////////////////////////			
-//int sumLoc=0;
-//for(Location location : locationList) {
-//	System.out.println("|   LocID:" + location.getLocationID() + " Wattage:" + location.getSumWattage());
-//	sumLoc += location.getSumWattage();
-//}
-//System.out.println("\\--Sum of each location's wattage: " + sumLoc + " (above)\n");
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-					//Find the min location and subtract from total system's wattage (totalWattageChanged)
+					//Find the least impactful location and subtract it from the system's total wattage
 					Location minLocation = new Location(-1);
 					int minWattLocPos = -1;
 					while(totalWattageChanged > maxWattage)
@@ -268,12 +242,15 @@ public class Simulate {
 					}
 				}
 			}
+			
+			//Print the changes done by the algorithm
 			ReportPrint(maxWattage,totalWattage,totalWattageChanged);
+			
+			//Empty the lists used for reporting changes
 			reportSmartAppliances.clear();
 			reportSmartAppliances.trimToSize();
 			reportLocations.clear();
 			reportLocations.trimToSize();
-			
 		}
 	}
 }
