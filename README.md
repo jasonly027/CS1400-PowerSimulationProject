@@ -57,10 +57,10 @@ CS1400 - Power Simulation Project is composed of java applications that will sim
 
 - If "L" is selected, then an appliance list will be output
 
-- If "G" is selected, the a randomly generated appliance list will be added to the list
+- If "G" is selected, then a randomly generated appliance list will be added to the list
     - Will output if this action was successful
     
-- If "X" is selected, the the appliance list will be cleared
+- If "X" is selected, then the appliance list will be cleared
     - Will output if this action was successful
     
 - If "S" is selected, the user will be prompted again for:
