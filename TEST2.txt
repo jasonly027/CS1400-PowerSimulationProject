@@ -50,5 +50,3 @@
 10000010,Fan,200,0.1,false,0.0
 10000010,Television - 43 inch,200,0.167,false,0.0
 10000010,Fan (Window),200,0.25,false,0.0
-
-
