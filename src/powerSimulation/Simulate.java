@@ -104,7 +104,7 @@ public class Simulate {
 			Random randGen = new Random();
 			for(int j = 0; j < applianceList.size(); ++j){
 				
-				if(/*applianceList.get(j).getProbOn() <= 0.01*(randGen.nextInt(100)+1)*/     true){
+				if(applianceList.get(j).getProbOn() <= 0.01*(randGen.nextInt(100)+1)){
 					appOn.add(applianceList.get(j));
 				}
 			}
@@ -139,9 +139,9 @@ public class Simulate {
 					if(appOn.get(i).getSmart())
 					{
 						//Position value keeps track of the index where the smart appliance is in smart appliance array. 
-						SmartAppliances.add(new SmartAppliance(applianceList.get(i).getLocationID(), applianceList.get(i).getAppName(),applianceList.get(i).getOnW(), applianceList.get(i).getProbOn(), applianceList.get(i).getSmart(), applianceList.get(i).getProbSmart(), applianceList.get(i).getID() ));
+						SmartAppliances.add(new SmartAppliance(appOn.get(i).getLocationID(), appOn.get(i).getAppName(),appOn.get(i).getOnW(), appOn.get(i).getProbOn(), appOn.get(i).getSmart(), appOn.get(i).getProbSmart(), appOn.get(i).getID() ));
 						SmartAppliances.get(counter).setPosition(counter);
-						smartAppliances1.add(new SmartAppliance(applianceList.get(i).getLocationID(), applianceList.get(i).getAppName(),applianceList.get(i).getOnW(), applianceList.get(i).getProbOn(), applianceList.get(i).getSmart(), applianceList.get(i).getProbSmart(), applianceList.get(i).getID() ));
+						smartAppliances1.add(new SmartAppliance(appOn.get(i).getLocationID(), appOn.get(i).getAppName(),appOn.get(i).getOnW(), appOn.get(i).getProbOn(), appOn.get(i).getSmart(), appOn.get(i).getProbSmart(), appOn.get(i).getID() ));
 						smartAppliances1.get(counter).setPosition(counter);
 						counter++;
 					}
